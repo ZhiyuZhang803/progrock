@@ -4,11 +4,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-problematic_songs = [
-    "11-zao-a_last_time_for_everything.mp3",
-    "Green Day -07- Basket Case.mp3",
-    "1979_The_Knack_My_Sharona.mp3",
-]
+problematic_songs = []
 
 
 class SongList:
@@ -62,7 +58,7 @@ class SongList:
             self.nonprog_count += 1
 
     def __str__(self) -> str:
-        return (f"Song List From {self.directory}:\n\
+        return f"Song List From {self.directory}:\n\
                 \tProgrock: {self.prog_count} songs\n\
                 \tNonProgrock: {self.nonprog_count} songs\n\
-                \tTotal: {len(self.song_list)} songs")
+                \tTotal: {len(self.song_list)} songs"
