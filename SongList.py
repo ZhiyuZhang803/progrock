@@ -1,4 +1,6 @@
 from Song import Song
+from concurrent.futures import ThreadPoolExecutor
+
 import os
 import logging
 
@@ -23,28 +25,36 @@ class SongList:
 
     def read_folder(self):
         files_list = {}
-        for root, _, files in os.walk(self.directory):
-            dir_name = os.path.relpath(root, self.directory)
-            label = 0 if "Not" in dir_name else 1
-            content = {}
-            song_count = 0
-            not_song_files = []
-            for file in files:
-                if not file.endswith(".mp3"):
-                    not_song_files.append(file)
-                else:
-                    song_count += 1
-                    song_path = os.path.join(root, file)
-                    if file not in problematic_songs:
-                        self.add_song(song_path, label)
-                        logger.debug(song_path)
+        with ThreadPoolExecutor() as executor:
+            song_tasks = []
+            for root, _, files in os.walk(self.directory):
+                dir_name = os.path.relpath(root, self.directory)
+                label = 0 if "Not" in dir_name else 1
+                content = {}
+                song_count = 0
+                not_song_files = []
+                for file in files:
+                    if not file.endswith(".mp3"):
+                        not_song_files.append(file)
                     else:
-                        logger.error(song_path)
+                        song_count += 1
+                        song_path = os.path.join(root, file)
+                        if file not in problematic_songs:
+                            # self.add_song(song_path, label)
+                            song_tasks.append(
+                                executor.submit(self.add_song, song_path, label)
+                            )
+                            logger.debug(song_path)
+                        else:
+                            logger.error(song_path)
 
-            if song_count > 0 or not_song_files:  # folder not empty
-                content["songs"] = song_count
-                content["others"] = not_song_files
-                files_list[dir_name] = content
+                if song_count > 0 or not_song_files:  # folder not empty
+                    content["songs"] = song_count
+                    content["others"] = not_song_files
+                    files_list[dir_name] = content
+
+        for task in song_tasks:
+            task.result()  # Wait for completion
 
         logger.debug(files_list)
         logger.info(self)

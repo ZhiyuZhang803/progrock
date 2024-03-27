@@ -16,3 +16,15 @@ logger.debug("===============  Started!  ===============")
 directory = "../toy_training_set"
 
 train_list = SongList(directory)
+
+# Get the first song and plot features
+song = train_list.song_list[0]
+print(song)
+song.get_all_features()
+song.plot_all_features()
+
+# Split song into 10-second segments
+song.split_song()
+seg = song.segments[0]
+seg.get_all_features()
+seg.plot_all_features()
