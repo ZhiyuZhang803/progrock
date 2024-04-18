@@ -1,7 +1,13 @@
 import librosa
+import logging
 import constants
 import numpy as np
 import matplotlib.pyplot as plt
+
+
+# Disable the logging from `matplotlib`
+plt_logger = logging.getLogger("matplotlib")
+plt_logger.setLevel(logging.ERROR)
 
 
 class Audio:

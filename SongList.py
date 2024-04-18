@@ -2,6 +2,7 @@ from Song import Song
 from concurrent.futures import ThreadPoolExecutor
 
 import os
+import json
 import logging
 
 logger = logging.getLogger(__name__)
@@ -12,7 +13,7 @@ problematic_songs = []
 class SongList:
     def __init__(self, directory):
         """
-        directory = "../CAP6610SP24_training_set"
+        eg., directory = "../CAP6610SP24_training_set"
 
         """
         self.directory = directory
@@ -66,6 +67,33 @@ class SongList:
             self.prog_count += 1
         else:
             self.nonprog_count += 1
+
+    def save_feature(self):
+        self.feature = {
+            "song_name_arr": [],
+            "segment_i_arr": [],
+            "audio_arr": [],
+            "spectro_arr": [],
+            "chroma_arr": [],
+            "onset_arr": [],
+            "MFCC_arr": [],
+            "label_arr": [],
+        }
+
+        for song in self.song_list:
+            song.process_song()
+            for segment in song.segments:
+                self.feature["song_name_arr"].append(song.name)
+                self.feature["segment_i_arr"].append(segment.name)
+                self.feature["label_arr"].append(song.label)
+                self.feature["audio_arr"].append(segment.audio.tolist())
+                self.feature["spectro_arr"].append(segment.spectro.tolist())
+                self.feature["chroma_arr"].append(segment.chroma.tolist())
+                self.feature["onset_arr"].append(segment.onset.tolist())
+                self.feature["MFCC_arr"].append(segment.MFCC.tolist())
+
+        with open("../data/feature_data.json", "w") as json_file:
+            json.dump(self.feature, json_file, indent=4)
 
     def __str__(self) -> str:
         return f"Song List From {self.directory}:\n\

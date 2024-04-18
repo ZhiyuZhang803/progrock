@@ -18,13 +18,9 @@ class Song(Audio):
         super().load_audio(path)
 
     def split_song(self):
-        # Calculate the number of samples per segment
         samples_per_segment = constants.segment_length * self.sr
-
-        # Calculate the total number of segments needed (drop the snippets with less than 10s)
         total_segments = int(np.floor(len(self.audio) / samples_per_segment))
 
-        # Segment the audio
         self.segments = []
         for i in range(total_segments):
             segment = Audio()
@@ -33,8 +29,10 @@ class Song(Audio):
             )
             self.segments.append(segment)
 
-    def save_features(self):
-        pass
+    def process_song(self):
+        self.split_song()
+        for segment in self.segments:
+            segment.get_all_features()
 
     def __str__(self):
         return f"(Song: {self.name}, Label: {self.label})"

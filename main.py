@@ -2,7 +2,7 @@ from SongList import SongList
 import logging
 
 logging.basicConfig(
-    filename="log_file.log",
+    filename="output/log_file.log",
     encoding="utf-8",
     format="%(asctime)s | %(levelname)s | %(module)s | %(message)s",
     level=logging.DEBUG,
