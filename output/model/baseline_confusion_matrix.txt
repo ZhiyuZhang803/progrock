@@ -1,0 +1,23 @@
+Train Snippets:
+True Neg: 6983
+False Neg: 34
+True Pos: 7841
+False Pos: 603
+
+Train Songs:
+True Neg: 285
+False Neg: 0
+True Pos: 113
+False Pos: 1
+
+Test Snippets:
+True Neg: 1064
+False Neg: 419
+True Pos: 1663
+False Pos: 861
+
+Test Songs:
+True Neg: 46
+False Neg: 0
+True Pos: 29
+False Pos: 27
