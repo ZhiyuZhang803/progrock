@@ -8,22 +8,12 @@ import torch.nn as nn
 
 from Dataset import MyDataset
 from torch.utils.data import DataLoader
-from Models.Baseline import Baseline
 from load_data import load_data
-
-logging.basicConfig(
-    filename="output/log_file.log",
-    encoding="utf-8",
-    format="%(asctime)s | %(levelname)s | %(module)s | %(message)s",
-    level=logging.DEBUG,
-)
 
 logger = logging.getLogger(__name__)
 
-logger.debug("===============  Started!  ===============")
 
-
-def pretrain(model, model_name):
+def algo(model, model_name):
     tik = time.time()
     device = torch.device(
         "cuda:0"
@@ -362,6 +352,3 @@ def pretrain(model, model_name):
 
     tok = time.time()
     logger.info(f"Elapsed time: {tok - tik} seconds")
-
-
-pretrain(Baseline(), "baseline")

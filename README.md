@@ -1,6 +1,6 @@
-# Data Processing
+# Extract and save feature
 
-`data_processing.py`
+Run `save_feature.py`.
 
 - Each subfolder in the `tran_set\` has an `.ods` file stating the list of songs, and `.mp3` files for songs.
     - `Progressive_Rock_Songs\`: {'songs': 142, 'others': ['prog_train.ods']}
@@ -17,3 +17,9 @@
             - Tempo
         - Others
 
+
+
+
+# Run algorithm
+
+Run `main.py`.
