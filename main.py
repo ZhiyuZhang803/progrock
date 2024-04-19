@@ -1,6 +1,3 @@
-from train import algo
-from Models.Baseline import Baseline
-
 import logging
 
 logging.basicConfig(
@@ -14,4 +11,11 @@ logger = logging.getLogger(__name__)
 
 logger.debug("===============  Started!  ===============")
 
+
+from train import algo
+from Models.Baseline import Baseline
+from Models.ModifiedBaseline import ModifiedBaseline
+
+
+# algo(Baseline(), "baseline")
 algo(Baseline(), "baseline")

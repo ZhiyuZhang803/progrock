@@ -22,4 +22,11 @@ Run `save_feature.py`.
 
 # Run algorithm
 
-Run `main.py`.
+- Place saved feature `json` files in relative path to this repo at `../data/[feature.json]`. The default paths are set in `train.py` as:
+    ```python
+        non_prog_other_path = "../data/Feature_Extraction_Other.json"
+        non_prog_pop_path = "../data/Feature_Extraction_Top_Pop.json"
+        prog_path = "../data/Feature_Extraction_Prog.json"
+    ```
+
+- Run `main.py`.
