@@ -7,6 +7,8 @@ logger = logging.getLogger(__name__)
 
 
 def read_json(input_path):
+    random.seed(1234)
+    np.random.seed(1234)
     # Save Sample
     train_data_temp = []
     train_label_temp = []

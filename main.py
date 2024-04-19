@@ -15,7 +15,15 @@ logger.debug("===============  Started!  ===============")
 from train import algo
 from Models.Baseline import Baseline
 from Models.ModifiedBaseline import ModifiedBaseline
+from Models.DeepBaseline import DeepBaseline
+from Models.DepthWiseBaseline import DepthWiseBaseline
+from Models.AcousticModel import AcousticModel
+from Models.GenreModel import GenreModel
 
 
 # algo(Baseline(), "baseline")
-algo(Baseline(), "baseline")
+# algo(ModifiedBaseline(), "modifiedbaseline")
+# algo(DeepBaseline(), "deepbaseline")
+# algo(DepthWiseBaseline(), "depthwisebaseline")
+# algo(AcousticModel(), "acoustic")
+algo(GenreModel(), "genre")

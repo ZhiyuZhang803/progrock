@@ -18,19 +18,21 @@ class ModifiedBaseline(nn.Module):
         )
 
         self.layer2 = nn.Sequential(
-            nn.Conv1d(in_channels=64, out_channels=64, kernel_size=3, padding=1),
-            nn.BatchNorm1d(64),
+            nn.Conv1d(in_channels=64, out_channels=128, kernel_size=3, padding=1),
+            nn.BatchNorm1d(128),
             nn.ReLU(),
             nn.MaxPool1d(kernel_size=2, stride=2),
         )
 
         self.fc1 = nn.Sequential(
-            nn.Linear(in_features=6848, out_features=600), nn.ReLU()
+            nn.Linear(in_features=13696, out_features=600), nn.ReLU()
         )
 
-        self.fc2 = nn.Sequential(nn.Linear(in_features=600, out_features=10), nn.ReLU())
+        self.fc2 = nn.Sequential(nn.Linear(in_features=600, out_features=30), nn.ReLU())
 
-        self.fc3 = nn.Linear(in_features=10, out_features=2)
+        self.fc3 = nn.Sequential(nn.Linear(in_features=30, out_features=4), nn.ReLU())
+
+        self.fc4 = nn.Linear(in_features=4, out_features=2)
 
     def forward(self, x):
         out = self.layer1(x)
@@ -39,5 +41,6 @@ class ModifiedBaseline(nn.Module):
         out = self.fc1(out)
         out = self.fc2(out)
         out = self.fc3(out)
+        out = self.fc4(out)
 
         return out

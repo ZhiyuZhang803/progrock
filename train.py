@@ -15,6 +15,12 @@ logger = logging.getLogger(__name__)
 
 def algo(model, model_name):
     tik = time.time()
+    # Set the random seed for PyTorch
+    torch.manual_seed(1234)
+    torch.cuda.manual_seed_all(1234)
+    torch.mps.manual_seed(1234)
+    np.random.seed(1234)
+
     device = torch.device(
         "cuda:0"
         if torch.cuda.is_available()
@@ -196,8 +202,8 @@ def algo(model, model_name):
                         pred_accuracy[true_out] += 1
                 except:
                     break
-        print("Non-Prog Accuracy: ", pred_accuracy[0] / count_class[0])
-        print("Prog Accuracy: ", pred_accuracy[1] / count_class[1])
+        logger.info(f"Non-Prog Accuracy: {pred_accuracy[0] / count_class[0]}")
+        logger.info(f"Prog Accuracy: {pred_accuracy[1] / count_class[1]}")
 
     with open(f"output/model/{model_name}_confusion_matrix.txt", "w") as file:
         file.write("Train Snippets:\n")
@@ -205,6 +211,8 @@ def algo(model, model_name):
         file.write("False Neg: {}\n".format(count_class[1] - pred_accuracy[1]))
         file.write("True Pos: {}\n".format(pred_accuracy[1]))
         file.write("False Pos: {}\n".format(count_class[0] - pred_accuracy[0]))
+        file.write(f"Non-Prog Accuracy: {pred_accuracy[0] / count_class[0]}\n")
+        file.write(f"Prog Accuracy: {pred_accuracy[1] / count_class[1]}\n")
 
     # On Training Songs
     logger.info("On training songs")
@@ -256,6 +264,8 @@ def algo(model, model_name):
         file.write("False Neg: {}\n".format(false_neg))
         file.write("True Pos: {}\n".format(true_pos))
         file.write("False Pos: {}\n".format(false_pos))
+        file.write(f"Non-Prog Accuracy: {true_neg/(true_neg + false_pos)}\n")
+        file.write(f"Prog Accuracy: {true_pos/(true_pos + false_neg)}\n")
 
     # On Testing (Validation) Snippets
     logger.info("On test snippets")
@@ -288,8 +298,8 @@ def algo(model, model_name):
                 if true_out == predict_out:
                     pred_accuracy[true_out] += 1
 
-        print("Non-Prog Accuracy: ", pred_accuracy[0] / count_class[0])
-        print("Prog Accuracy: ", pred_accuracy[1] / count_class[1])
+        logger.info(f"Non-Prog Accuracy: {pred_accuracy[0] / count_class[0]}")
+        logger.info(f"Prog Accuracy: {pred_accuracy[1] / count_class[1]}")
 
     with open(f"output/model/{model_name}_confusion_matrix.txt", "a") as file:
         file.write("\nTest Snippets:\n")
@@ -297,6 +307,8 @@ def algo(model, model_name):
         file.write("False Neg: {}\n".format(count_class[1] - pred_accuracy[1]))
         file.write("True Pos: {}\n".format(pred_accuracy[1]))
         file.write("False Pos: {}\n".format(count_class[0] - pred_accuracy[0]))
+        file.write(f"Non-Prog Accuracy: {pred_accuracy[0] / count_class[0]}\n")
+        file.write(f"Prog Accuracy: {pred_accuracy[1] / count_class[1]}\n")
 
     # On Testing Songs
     logger.info("On testing songs")
@@ -349,6 +361,8 @@ def algo(model, model_name):
         file.write("False Neg: {}\n".format(false_neg))
         file.write("True Pos: {}\n".format(true_pos))
         file.write("False Pos: {}\n".format(false_pos))
+        file.write(f"Non-Prog Accuracy: {true_neg/(true_neg + false_pos)}\n")
+        file.write(f"Prog Accuracy: {true_pos/(true_pos + false_neg)}\n")
 
     tok = time.time()
     logger.info(f"Elapsed time: {tok - tik} seconds")

@@ -1,0 +1,24 @@
+Train Snippets:
+True Neg: 6911
+False Neg: 472
+True Pos: 7473
+False Pos: 702
+Non-Prog Accuracy: 0.9077893077630369Prog Accuracy: 0.9405915670232851
+Train Songs:
+True Neg: 283
+False Neg: 1
+True Pos: 112
+False Pos: 3
+Non-Prog Accuracy: 0.9895104895104895Prog Accuracy: 0.9911504424778761
+Test Snippets:
+True Neg: 1278
+False Neg: 658
+True Pos: 1354
+False Pos: 620
+Non-Prog Accuracy: 0.6733403582718651Prog Accuracy: 0.672962226640159
+Test Songs:
+True Neg: 53
+False Neg: 3
+True Pos: 26
+False Pos: 20
+Non-Prog Accuracy: 0.726027397260274Prog Accuracy: 0.896551724137931
