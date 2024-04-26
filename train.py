@@ -1,25 +1,32 @@
+import os
 import time
 import torch
 import pickle
 import logging
-import numpy as np
 import pandas as pd
 import torch.nn as nn
-
-from Dataset import MyDataset
-from torch.utils.data import DataLoader
-from load_data import load_data
 
 logger = logging.getLogger(__name__)
 
 
-def algo(model, model_name):
+def algo(
+    model,
+    model_name,
+    train_dataloader,
+    test_dataloader,
+    train_size,
+    batch_size_training,
+    batch_size_testing,
+    run_num=0,
+    fix_random=False,
+):
     tik = time.time()
+
     # Set the random seed for PyTorch
-    torch.manual_seed(1234)
-    torch.cuda.manual_seed_all(1234)
-    torch.mps.manual_seed(1234)
-    np.random.seed(1234)
+    if fix_random:
+        torch.manual_seed(1234)
+        torch.cuda.manual_seed_all(1234)
+        torch.mps.manual_seed(1234)
 
     device = torch.device(
         "cuda:0"
@@ -27,45 +34,6 @@ def algo(model, model_name):
         else "mps" if torch.backends.mps.is_available() else "cpu"
     )
     logger.debug(f"Device: {device}")
-
-    non_prog_other_path = "../data/Feature_Extraction_Other.json"
-    non_prog_pop_path = "../data/Feature_Extraction_Top_Pop.json"
-    prog_path = "../data/Feature_Extraction_Prog.json"
-
-    (
-        train_data,
-        train_label,
-        test_data,
-        test_label,
-        train_name_float,
-        test_name_float,
-        train_snippets,
-        test_snippets,
-    ) = load_data(non_prog_other_path, non_prog_pop_path, prog_path)
-
-    batch_size_training = 500
-    batch_size_testing = len(test_data)
-
-    my_dataset = MyDataset(
-        np.array(train_data),
-        np.array(train_label),
-        np.array(train_name_float),
-        np.array(train_snippets),
-    )
-    my_dataset2 = MyDataset(
-        np.array(test_data),
-        np.array(test_label),
-        np.array(test_name_float),
-        np.array(test_snippets),
-    )
-
-    # Create DataLoader
-    train_dataloader = DataLoader(
-        my_dataset, batch_size=batch_size_training, shuffle=True
-    )
-    test_dataloader = DataLoader(
-        my_dataset2, batch_size=batch_size_testing, shuffle=True
-    )
 
     # model = Baseline()
     model.to(device)
@@ -76,7 +44,7 @@ def algo(model, model_name):
     optimizer = torch.optim.Adam(model.parameters(), lr=0.0001)
 
     # Simple training process
-    train_epoch = int(len(train_data) / batch_size_training) + 1
+    train_epoch = int(train_size / batch_size_training) + 1
     for epoch in range(train_epoch):
         for i, (images, labels, names, snippets) in enumerate(train_dataloader):
             # Transfering images and labels to GPU if available
@@ -98,8 +66,12 @@ def algo(model, model_name):
 
         logger.info(f"Epoch: {epoch}, Loss: {loss.data:.5f}")
 
+    # Create the directory if it doesn't exist
+    output_dir = f"output/model/{model_name}/"
+    os.makedirs(output_dir, exist_ok=True)
+
     # Save model in a pickle file
-    model_file = f"output/model/{model_name}.pkl"
+    model_file = output_dir + f"model_{run_num}.pkl"
     with open(model_file, "wb") as file:
         pickle.dump(model, file)
         logger.debug(f"Model saved to {model_file}")
@@ -145,7 +117,7 @@ def algo(model, model_name):
             "true_class": true_class,
         }
     )
-    df.to_csv(f"output/model/{model_name}_test_result.csv")
+    df.to_csv(output_dir + f"test_result_{run_num}.csv")
 
     # See how many songs are correctly predicted
     song_predict = []
@@ -205,14 +177,21 @@ def algo(model, model_name):
         logger.info(f"Non-Prog Accuracy: {pred_accuracy[0] / count_class[0]}")
         logger.info(f"Prog Accuracy: {pred_accuracy[1] / count_class[1]}")
 
-    with open(f"output/model/{model_name}_confusion_matrix.txt", "w") as file:
-        file.write("Train Snippets:\n")
-        file.write("True Neg: {}\n".format(pred_accuracy[0]))
-        file.write("False Neg: {}\n".format(count_class[1] - pred_accuracy[1]))
-        file.write("True Pos: {}\n".format(pred_accuracy[1]))
-        file.write("False Pos: {}\n".format(count_class[0] - pred_accuracy[0]))
-        file.write(f"Non-Prog Accuracy: {pred_accuracy[0] / count_class[0]}\n")
-        file.write(f"Prog Accuracy: {pred_accuracy[1] / count_class[1]}\n")
+    with open(output_dir + f"confusion_matrix_{run_num}.txt", "w") as file:
+        file.write("Train Snippets - True Neg: {}\n".format(pred_accuracy[0]))
+        file.write(
+            "Train Snippets - False Neg: {}\n".format(count_class[1] - pred_accuracy[1])
+        )
+        file.write("Train Snippets - True Pos: {}\n".format(pred_accuracy[1]))
+        file.write(
+            "Train Snippets - False Pos: {}\n".format(count_class[0] - pred_accuracy[0])
+        )
+        file.write(
+            f"Train Snippets - Non-Prog Accuracy: {pred_accuracy[0] / count_class[0]}\n"
+        )
+        file.write(
+            f"Train Snippets - Prog Accuracy: {pred_accuracy[1] / count_class[1]}\n"
+        )
 
     # On Training Songs
     logger.info("On training songs")
@@ -258,14 +237,16 @@ def algo(model, model_name):
     logger.info(f"Non-Prog Accuracy: {true_neg/(true_neg + false_pos)}")
     logger.info(f"Prog Accuracy: {true_pos/(true_pos + false_neg)}")
 
-    with open(f"output/model/{model_name}_confusion_matrix.txt", "a") as file:
-        file.write("\nTrain Songs:\n")
-        file.write("True Neg: {}\n".format(true_neg))
-        file.write("False Neg: {}\n".format(false_neg))
-        file.write("True Pos: {}\n".format(true_pos))
-        file.write("False Pos: {}\n".format(false_pos))
-        file.write(f"Non-Prog Accuracy: {true_neg/(true_neg + false_pos)}\n")
-        file.write(f"Prog Accuracy: {true_pos/(true_pos + false_neg)}\n")
+    with open(output_dir + f"confusion_matrix_{run_num}.txt", "a") as file:
+        file.write("\n")
+        file.write("Train Songs - True Neg: {}\n".format(true_neg))
+        file.write("Train Songs - False Neg: {}\n".format(false_neg))
+        file.write("Train Songs - True Pos: {}\n".format(true_pos))
+        file.write("Train Songs - False Pos: {}\n".format(false_pos))
+        file.write(
+            f"Train Songs - Non-Prog Accuracy: {true_neg/(true_neg + false_pos)}\n"
+        )
+        file.write(f"Train Songs - Prog Accuracy: {true_pos/(true_pos + false_neg)}\n")
 
     # On Testing (Validation) Snippets
     logger.info("On test snippets")
@@ -301,14 +282,22 @@ def algo(model, model_name):
         logger.info(f"Non-Prog Accuracy: {pred_accuracy[0] / count_class[0]}")
         logger.info(f"Prog Accuracy: {pred_accuracy[1] / count_class[1]}")
 
-    with open(f"output/model/{model_name}_confusion_matrix.txt", "a") as file:
-        file.write("\nTest Snippets:\n")
-        file.write("True Neg: {}\n".format(pred_accuracy[0]))
-        file.write("False Neg: {}\n".format(count_class[1] - pred_accuracy[1]))
-        file.write("True Pos: {}\n".format(pred_accuracy[1]))
-        file.write("False Pos: {}\n".format(count_class[0] - pred_accuracy[0]))
-        file.write(f"Non-Prog Accuracy: {pred_accuracy[0] / count_class[0]}\n")
-        file.write(f"Prog Accuracy: {pred_accuracy[1] / count_class[1]}\n")
+    with open(output_dir + f"confusion_matrix_{run_num}.txt", "a") as file:
+        file.write("\n")
+        file.write("Test Snippets - True Neg: {}\n".format(pred_accuracy[0]))
+        file.write(
+            "Test Snippets - False Neg: {}\n".format(count_class[1] - pred_accuracy[1])
+        )
+        file.write("Test Snippets - True Pos: {}\n".format(pred_accuracy[1]))
+        file.write(
+            "Test Snippets - False Pos: {}\n".format(count_class[0] - pred_accuracy[0])
+        )
+        file.write(
+            f"Test Snippets - Non-Prog Accuracy: {pred_accuracy[0] / count_class[0]}\n"
+        )
+        file.write(
+            f"Test Snippets - Prog Accuracy: {pred_accuracy[1] / count_class[1]}\n"
+        )
 
     # On Testing Songs
     logger.info("On testing songs")
@@ -355,14 +344,16 @@ def algo(model, model_name):
     logger.info(f"Non-Prog Accuracy: {true_neg/(true_neg + false_pos)}")
     logger.info(f"Prog Accuracy: {true_pos/(true_pos + false_neg)}")
 
-    with open(f"output/model/{model_name}_confusion_matrix.txt", "a") as file:
-        file.write("\nTest Songs:\n")
-        file.write("True Neg: {}\n".format(true_neg))
-        file.write("False Neg: {}\n".format(false_neg))
-        file.write("True Pos: {}\n".format(true_pos))
-        file.write("False Pos: {}\n".format(false_pos))
-        file.write(f"Non-Prog Accuracy: {true_neg/(true_neg + false_pos)}\n")
-        file.write(f"Prog Accuracy: {true_pos/(true_pos + false_neg)}\n")
+    with open(output_dir + f"confusion_matrix_{run_num}.txt", "a") as file:
+        file.write("\n")
+        file.write("Test Songs - True Neg: {}\n".format(true_neg))
+        file.write("Test Songs - False Neg: {}\n".format(false_neg))
+        file.write("Test Songs - True Pos: {}\n".format(true_pos))
+        file.write("Test Songs - False Pos: {}\n".format(false_pos))
+        file.write(
+            f"Test Songs - Non-Prog Accuracy: {true_neg/(true_neg + false_pos)}\n"
+        )
+        file.write(f"Test Songs - Prog Accuracy: {true_pos/(true_pos + false_neg)}")
 
     tok = time.time()
     logger.info(f"Elapsed time: {tok - tik} seconds")
