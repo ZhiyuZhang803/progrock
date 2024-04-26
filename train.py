@@ -37,7 +37,6 @@ def algo(
 
     # model = Baseline()
     model.to(device)
-
     logger.debug(model)
 
     error = nn.CrossEntropyLoss()
@@ -354,6 +353,8 @@ def algo(
             f"Test Songs - Non-Prog Accuracy: {true_neg/(true_neg + false_pos)}\n"
         )
         file.write(f"Test Songs - Prog Accuracy: {true_pos/(true_pos + false_neg)}")
+
+    del model, error, optimizer
 
     tok = time.time()
     logger.info(f"Elapsed time: {tok - tik} seconds")

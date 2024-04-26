@@ -25,26 +25,26 @@ Run `save_feature.py`.
 
 We build several baseline models based on the last years' best project, as well as several new models.
 
-### 1 Baseline
+### 1. Baseline
 conv1d(43,64) -> conv1d(64,64) -> linear(6848,600) -> linear(600,10) -> linear(10,2)
 
-### 2 ModifiedBaseline
+### 2. ModifiedBaseline
 conv1d(43,64) -> conv1d(64,128) -> linear(13696,600) -> linear(600,30) -> linear(30,4) -> linear(4,2)
 
-### 3 DeepBaseline
+### 3. DeepBaseline
 conv1d(43,64) -> conv1d(64,128) -> conv1d(128,256) -> conv1d(256,512) -> linear(13312,100) -> linear(100,10) -> linear(10,2)
 
-### 4 DeepWiseBaseline
+### 4. DeepWiseBaseline
 conv1d(43,86) -> conv1d(86,172) -> conv1d(172,344) -> linear(18232,2)
 
-### 5 AcousticModel (O’Brien 2016)
+### 5. AcousticModel (O’Brien 2016)
 conv1d(43,64) -> conv1d(64,128) -> conv1d(128,128) -> conv1d(128,64) -> conv1d(64,32)-> conv1d(32,32) -> linear(832,2)
 - O’Brien, Tim. "Musical Structure Segmentation with Convolutional Neural Networks." 17th International Society for Music Information Retrieval Conference. 2016.
 
-### 6 GenreModel 
+### 6. GenreModel 
 conv1d(43,128) -> conv1d(128,128) -> conv1d(128,256) -> conv1d(256,256) -> conv1d(256,256) -> conv1d(256,256) -> conv1d(256,512)-> conv1d(512,10) -> linear(40,2)
 
-### 7 ResnetModel (Allamy and Alessandro 2021)
+### 7. ResnetModel (Allamy and Alessandro 2021)
 conv1d(43,128) -> res1d(128,128) -> res1d(128,256) -> … -> res1d(256,512)-> conv1d(512,10) -> linear(40,2)
 - Allamy, Safaa, and Alessandro Lameiras Koerich. "1D CNN architectures for music genre classification." 2021 IEEE symposium series on computational intelligence (SSCI). IEEE, 2021.
 
