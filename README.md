@@ -74,4 +74,4 @@ conv1d(43,128) -> res1d(128,128) -> res1d(128,256) -> … -> res1d(256,512)-> co
     - Model test labeling result
     - Model pickle file
 
-- Log file is generated at `output/
+- Log file is generated at `output/log_file.log`
