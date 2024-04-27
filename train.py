@@ -17,10 +17,13 @@ def algo(
     train_size,
     batch_size_training,
     batch_size_testing,
+    use_long,
     run_num=0,
     fix_random=False,
 ):
     tik = time.time()
+
+    long = "_long" if use_long else ""
 
     # Set the random seed for PyTorch
     if fix_random:
@@ -66,7 +69,7 @@ def algo(
         logger.info(f"Epoch: {epoch}, Loss: {loss.data:.5f}")
 
     # Create the directory if it doesn't exist
-    output_dir = f"output/model/{model_name}/"
+    output_dir = f"output/model/{model_name + long}/"
     os.makedirs(output_dir, exist_ok=True)
 
     # Save model in a pickle file

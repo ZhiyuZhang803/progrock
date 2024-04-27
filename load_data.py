@@ -135,14 +135,16 @@ def load_data(
     )
 
 
-def load_train_test(only_train=False, fix_random=False):
+def load_train_test(use_long, only_train=False, fix_random=False):
     # Set the random seed for PyTorch
     if fix_random:
         np.random.seed(1234)
 
-    non_prog_other_path_train = "../data/Feature_Extraction_Other.json"
-    non_prog_pop_path_train = "../data/Feature_Extraction_Top_Pop.json"
-    prog_path_train = "../data/Feature_Extraction_Prog.json"
+    long = "_Long" if use_long else ""
+
+    non_prog_other_path_train = f"../data/Feature_Extraction_Other{long}.json"
+    non_prog_pop_path_train = f"../data/Feature_Extraction_Top_Pop{long}.json"
+    prog_path_train = f"../data/Feature_Extraction_Prog{long}.json"
 
     if only_train:
         (
@@ -158,9 +160,9 @@ def load_train_test(only_train=False, fix_random=False):
             non_prog_other_path_train, non_prog_pop_path_train, prog_path_train
         )
     else:
-        non_prog_other_path_test = "../data/Test_Feature_Extraction_Other.json"
-        non_prog_pop_path_test = "../data/Test_Feature_Extraction_Top_Pop.json"
-        prog_path_test = "../data/Test_Feature_Extraction_Prog.json"
+        non_prog_other_path_test = f"../data/Test_Feature_Extraction_Other{long}.json"
+        non_prog_pop_path_test = f"../data/Test_Feature_Extraction_Top_Pop{long}.json"
+        prog_path_test = f"../data/Test_Feature_Extraction_Prog{long}.json"
 
         (
             train_data,

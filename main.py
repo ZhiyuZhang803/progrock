@@ -33,4 +33,4 @@ model_dict = {
 
 total_run = 10
 
-run(model_dict, total_run)
+run(model_dict, total_run, use_long=True)

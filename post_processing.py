@@ -67,14 +67,14 @@ def generate_average_result(model_name):
 
 
 ## MAIN FUNCTION
-def run(model_dict, total_run):
+def run(model_dict, total_run, use_long=False):
     (
         train_dataloader,
         test_dataloader,
         train_size,
         batch_size_training,
         batch_size_testing,
-    ) = load_train_test()
+    ) = load_train_test(use_long)
 
     for model_name, model in model_dict.items():
         for i in range(total_run):
@@ -86,6 +86,7 @@ def run(model_dict, total_run):
                 train_size,
                 batch_size_training,
                 batch_size_testing,
+                use_long,
                 run_num=i,
             )
         generate_average_result(model_name)
