@@ -22,7 +22,7 @@ from Models.ResNet1D import ResNet1D
 
 
 model_dict = {
-    # "baseline": Baseline(),
+    "baseline": Baseline(),
     "modifiedbaseline": ModifiedBaseline(),
     "deepbaseline": DeepBaseline(),
     "depthwisebaseline": DepthWiseBaseline(),
