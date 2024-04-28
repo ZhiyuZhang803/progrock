@@ -5,6 +5,7 @@
 """
 
 import os
+import pandas as pd
 from train import algo
 from load_data import load_train_test
 
@@ -64,6 +65,55 @@ def generate_average_result(model_name):
     # Save average counts to a new file
     output_file = os.path.join(folder_path, "confusion_matrix_avg.txt")
     save_average_to_file(average_counts, output_file)
+
+
+def get_accuracy_values(folder_path):
+    accuracy_values = {}
+    for root, dirs, files in os.walk(folder_path):
+        for file in files:
+            if file == "confusion_matrix_avg.txt":
+                file_path = os.path.join(root, file)
+                data = parse_confusion_matrix(file_path)
+                accuracy_values[root] = data
+    return accuracy_values
+
+
+def calculate_overall_accuracy(true_pos, true_neg, total):
+    return (true_pos + true_neg) / total
+
+
+def calculate_overall_accuracies(data):
+    data["Test Snippets - Overall Accuracy"] = calculate_overall_accuracy(
+        data["Test Snippets - True Pos"],
+        data["Test Snippets - True Neg"],
+        data["Test Snippets - True Pos"]
+        + data["Test Snippets - True Neg"]
+        + data["Test Snippets - False Pos"]
+        + data["Test Snippets - False Neg"],
+    )
+    data["Test Songs - Overall Accuracy"] = calculate_overall_accuracy(
+        data["Test Songs - True Pos"],
+        data["Test Songs - True Neg"],
+        data["Test Songs - True Pos"]
+        + data["Test Songs - True Neg"]
+        + data["Test Songs - False Pos"]
+        + data["Test Songs - False Neg"],
+    )
+    return data
+
+
+def compare_results():
+    folder_path = "output/model/"
+    accuracy_values = get_accuracy_values(folder_path)
+
+    processed_accuracy_values = {
+        folder: calculate_overall_accuracies(data)
+        for folder, data in accuracy_values.items()
+    }
+
+    # Convert to DataFrame
+    df = pd.DataFrame(processed_accuracy_values).transpose()
+    df.to_csv("output/model/results_comparison.csv")
 
 
 ## MAIN FUNCTION

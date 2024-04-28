@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 logger.debug("===============  Started!  ===============")
 
-from post_processing import run, generate_average_result
+from post_processing import run, generate_average_result, compare_results
 from Models.Baseline import Baseline
 from Models.ModifiedBaseline import ModifiedBaseline
 from Models.DeepBaseline import DeepBaseline
@@ -34,17 +34,22 @@ model_dict = {
 
 total_run = 10
 
+## MAIN FUNCTION
 # run(model_dict, total_run, use_long=True)
 
-model_long_names = [
-    "baseline_long",
-    "modifiedbaseline_long",
-    "deepbaseline_long",
-    "depthwisebaseline_long",
-    "acoustic_long",
-    "genre_long",
-    "resnet_long",
-]
+## ADD LONG AVERAGE
+# model_long_names = [
+#     "baseline_long",
+#     "modifiedbaseline_long",
+#     "deepbaseline_long",
+#     "depthwisebaseline_long",
+#     "acoustic_long",
+#     "genre_long",
+#     "resnet_long",
+# ]
 
-for name in model_long_names:
-    generate_average_result(name)
+# for name in model_long_names:
+#     generate_average_result(name)
+
+## COMPARE RESULTS
+compare_results()
