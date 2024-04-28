@@ -22,11 +22,11 @@ from Models.ResNet1D import ResNet1D
 
 
 model_dict = {
-    "baseline": Baseline(),
-    "modifiedbaseline": ModifiedBaseline(),
-    "deepbaseline": DeepBaseline(),
-    "depthwisebaseline": DepthWiseBaseline(),
-    "acoustic": AcousticModel(),
+    # "baseline": Baseline(),
+    # "modifiedbaseline": ModifiedBaseline(),
+    # "deepbaseline": DeepBaseline(),
+    # "depthwisebaseline": DepthWiseBaseline(),
+    # "acoustic": AcousticModel(),
     "genre": GenreModel(),
     "resnet": ResNet1D(),
 }
