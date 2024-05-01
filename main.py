@@ -12,6 +12,7 @@ logger = logging.getLogger(__name__)
 logger.debug("===============  Started!  ===============")
 
 from post_processing import run, generate_average_result, compare_results
+from cutoff_eval import cutoff_eval
 from Models.Baseline import Baseline
 from Models.ModifiedBaseline import ModifiedBaseline
 from Models.DeepBaseline import DeepBaseline
@@ -22,14 +23,16 @@ from Models.ResNet1D import ResNet1D
 
 
 model_dict = {
-    # "baseline": Baseline(),
-    # "modifiedbaseline": ModifiedBaseline(),
-    # "deepbaseline": DeepBaseline(),
-    # "depthwisebaseline": DepthWiseBaseline(),
-    # "acoustic": AcousticModel(),
+    "baseline": Baseline(),
+    "modifiedbaseline": ModifiedBaseline(),
+    "deepbaseline": DeepBaseline(),
+    "depthwisebaseline": DepthWiseBaseline(),
+    "acoustic": AcousticModel(),
     "genre": GenreModel(),
     "resnet": ResNet1D(),
 }
+
+model_names = list(model_dict.keys())
 
 
 total_run = 10
@@ -52,4 +55,10 @@ total_run = 10
 #     generate_average_result(name)
 
 ## COMPARE RESULTS
-compare_results()
+# compare_results()
+
+
+## CUTOFF EVAL
+# cutoff_eval("baseline")
+# cutoff_eval("genre")
+cutoff_eval("resnet")
