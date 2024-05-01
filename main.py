@@ -13,6 +13,7 @@ logger.debug("===============  Started!  ===============")
 
 from post_processing import run, generate_average_result, compare_results
 from cutoff_eval import cutoff_eval
+from load_data import load_train_test
 from Models.Baseline import Baseline
 from Models.ModifiedBaseline import ModifiedBaseline
 from Models.DeepBaseline import DeepBaseline
@@ -61,4 +62,7 @@ total_run = 10
 ## CUTOFF EVAL
 # cutoff_eval("baseline")
 # cutoff_eval("genre")
-cutoff_eval("resnet")
+# cutoff_eval("resnet")
+
+## SONG NAME ID MAPPING
+load_train_test(use_long=False)

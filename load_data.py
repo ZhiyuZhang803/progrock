@@ -6,6 +6,7 @@
 import json
 import logging
 import numpy as np
+import pandas as pd
 from Dataset import MyDataset
 from torch.utils.data import DataLoader
 
@@ -122,6 +123,11 @@ def load_data(
             test_name_float.append(flag)
         else:
             test_name_float.append(flag)
+
+    df_train = pd.DataFrame(list(train_name_dict.items()), columns=["ID", "Name"])
+    df_train.to_csv("output/train_name_dict.csv", index=False)
+    df_test = pd.DataFrame(list(test_name_dict.items()), columns=["ID", "Name"])
+    df_test.to_csv("output/test_name_dict.csv", index=False)
 
     return (
         train_data,
