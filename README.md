@@ -20,6 +20,7 @@ Run `save_feature.py`.
         - Rythym
             - Tempo
         - Others
+    - Feature plots saved at [`output/`](output/)
 
 ## Models
 
@@ -41,14 +42,17 @@ conv1d(43,86) -> conv1d(86,172) -> conv1d(172,344) -> linear(18232,2)
 conv1d(43,64) -> conv1d(64,128) -> conv1d(128,128) -> conv1d(128,64) -> conv1d(64,32)-> conv1d(32,32) -> linear(832,2)
 - O’Brien, Tim. "Musical Structure Segmentation with Convolutional Neural Networks." 17th International Society for Music Information Retrieval Conference. 2016.
 
-### 6. GenreModel 
+### 6. GenreModel (End-to-end, )
 conv1d(43,128) -> conv1d(128,128) -> conv1d(128,256) -> conv1d(256,256) -> conv1d(256,256) -> conv1d(256,256) -> conv1d(256,512)-> conv1d(512,10) -> linear(40,2)
+- Pons, O. Nieto, M. Prockup, E. Schmidt, A. Ehmann, and X. Serra, “End-to-end learning for music audio tagging at scale,” in Intl Society for Music Inf Retrieval Conf, 2018, pp. 1–8.
+
 
 ### 7. ResnetModel (Allamy and Alessandro 2021)
 conv1d(43,128) -> res1d(128,128) -> res1d(128,256) -> … -> res1d(256,512)-> conv1d(512,10) -> linear(40,2)
 - Allamy, Safaa, and Alessandro Lameiras Koerich. "1D CNN architectures for music genre classification." 2021 IEEE symposium series on computational intelligence (SSCI). IEEE, 2021.
 
-
+### 8. LSTM Model
+Recurrent NN
 
 ## Run algorithm
 
@@ -75,3 +79,20 @@ conv1d(43,128) -> res1d(128,128) -> res1d(128,256) -> … -> res1d(256,512)-> co
     - Model pickle file
 
 - Log file is generated at `output/log_file.log`
+
+
+## Post Analysis
+
+- Increasing the cutoff value of binary classification in the last layer of neural network
+- Increasing the cutoff value of the proportion of snippets to become a Prog Rock song
+
+## Conclusion
+
+- We try 8 different models (CNN Structure, Recurrent Structure, and ResNet structure) with two types of snippets (non-overlap and 50% overlap).
+- ResNet structure with normal snippets provides best prediction accuracy.
+- With post-processing techniques, we can further improve the model accuracy to 82.64%, which has 3.5% improvement compared to the baseline model.
+- We still find some type of musics that are hard to be classified under our criterion.
+- For future work, we suggest:
+    1. More advanced post-processing classification techniques; 
+    2. More advanced image classification techniques Neural ODEs (Cui et al. 2023); 
+    3. Extract other features like lyrics.
