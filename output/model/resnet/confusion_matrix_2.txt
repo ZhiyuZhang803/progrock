@@ -1,0 +1,27 @@
+Train Snippets - True Neg: 9141
+Train Snippets - False Neg: 54
+Train Snippets - True Pos: 9903
+Train Snippets - False Pos: 370
+Train Snippets - Non-Prog Accuracy: 0.961097676374724
+Train Snippets - Prog Accuracy: 0.994576679722808
+
+Train Songs - True Neg: 359
+Train Songs - False Neg: 0
+Train Songs - True Pos: 142
+Train Songs - False Pos: 0
+Train Songs - Non-Prog Accuracy: 1.0
+Train Songs - Prog Accuracy: 1.0
+
+Test Snippets - True Neg: 3153
+Test Snippets - False Neg: 1980
+Test Snippets - True Pos: 5143
+Test Snippets - False Pos: 1836
+Test Snippets - Non-Prog Accuracy: 0.6319903788334336
+Test Snippets - Prog Accuracy: 0.7220272357152885
+
+Test Songs - True Neg: 111
+Test Songs - False Neg: 21
+Test Songs - True Pos: 114
+Test Songs - False Pos: 42
+Test Songs - Non-Prog Accuracy: 0.7254901960784313
+Test Songs - Prog Accuracy: 0.8444444444444444
